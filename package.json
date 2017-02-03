@@ -1,0 +1,29 @@
+{
+  "name": "drachtio-ipv6proxy",
+  "version": "0.1.0",
+  "description": "sip ipv6 to ipv4 B2BUA ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davehorton/drachtio-ipv6proxy.git"
+  },
+  "author": "Dave Horton",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davehorton/drachtio-ipv6proxy/issues"
+  },
+  "homepage": "https://github.com/davehorton/drachtio-ipv6proxy#readme",
+  "dependencies": {
+    "async": "^2.1.4",
+    "drachtio": "^1.0.8",
+    "drachtio-fsmrf": "^0.100.3",
+    "drachtio-mw-registration-parser": "0.0.2",
+    "drachtio-srf": "^2.0.5",
+    "iptables": "0.0.4",
+    "lodash": "^4.17.2",
+    "redis": "^2.6.3"
+  }
+}
