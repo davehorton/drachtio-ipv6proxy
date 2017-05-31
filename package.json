@@ -1,6 +1,6 @@
 {
   "name": "drachtio-ipv6proxy",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "sip ipv6 to ipv4 B2BUA ",
   "main": "app.js",
   "scripts": {
@@ -19,6 +19,7 @@
   "dependencies": {
     "async": "^2.1.4",
     "drachtio": "^1.0.8",
+    "drachtio-sip": "^0.3.4",
     "drachtio-fsmrf": "^0.100.3",
     "drachtio-mw-registration-parser": "0.0.2",
     "drachtio-srf": "^2.0.5",
