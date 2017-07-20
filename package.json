@@ -1,6 +1,6 @@
 {
   "name": "drachtio-ipv6proxy",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "sip ipv6 to ipv4 B2BUA ",
   "main": "app.js",
   "scripts": {
