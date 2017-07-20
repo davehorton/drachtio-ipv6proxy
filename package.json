@@ -18,13 +18,17 @@
   "homepage": "https://github.com/davehorton/drachtio-ipv6proxy#readme",
   "dependencies": {
     "async": "^2.1.4",
-    "drachtio": "^1.0.8",
-    "drachtio-sip": "^0.3.4",
-    "drachtio-fsmrf": "^0.100.3",
+    "bencode": "^1.0.0",
+    "config": "^1.26.1",
+    "dgram": "^1.0.1",
     "drachtio-mw-registration-parser": "0.0.2",
-    "drachtio-srf": "^2.0.5",
+    "drachtio-sip": "^0.3.4",
+    "drachtio-srf": "^3.0.18",
     "iptables": "0.0.4",
     "lodash": "^4.17.2",
-    "redis": "^2.6.3"
+    "pino": "^4.6.0",
+    "redis": "^2.6.3",
+    "uuid": "^3.1.0",
+    "sdp-transform": "^2.3.0"
   }
 }

@@ -1,22 +1,31 @@
-'use strict';
+const config = require('config') ;
+const Srf = require('drachtio-srf') ;
+const srf = new Srf(config.get('drachtio')) ;
+const Rtpengine = require('./lib/rtpengine') ;
+const pino = require('pino');
+const logger = srf.locals.logger = pino({
+  serializers: {
+    err: pino.stdSerializers.err
+  }
+});
+const rtpengine = new Rtpengine(logger,
+  config.get('rtpengine.ng-address'),
+  config.get('rtpengine.ng-port'),
+  config.get('rtpengine.local-address'),
+  config.get('rtpengine.local-port')
+) ;
 
-var drachtio = require('drachtio') ;
-var app = drachtio() ;
-var Srf = require('drachtio-srf') ;
-var srf = new Srf(app) ;
-var blacklist = require('./lib/blacklist');
-var config = require('./lib/config') ;
-var _ = require('lodash');
+const _ = require('lodash');
 
+logger.level = config.has('logger.level') ? config.get('logger.level') : 'debug' ;
 
-exports = module.exports = app ;
+exports = module.exports = srf ;
 
-srf.connect(config.drachtio) 
-.on('connect', function(err, hostport) {
-  app.hostport = hostport ;
-  app.transports = _.map( hostport.split(','), function(s) {
-    var arr = /(.*)\/(.*)/.exec( s ) ;
-    if( arr ) {
+srf.on('connect', (err, hostport) => {
+  srf.locals.hostport = hostport ;
+  srf.locals.transports = _.map(hostport.split(','), (s) => {
+    const arr = /(.*)\/(.*)/.exec(s) ;
+    if (arr) {
       return {
         protocol: arr[1],
         address: arr[2]
@@ -24,29 +33,24 @@ srf.connect(config.drachtio)
     }
     return {} ;
   });
-  console.log('connected to drachtio listening for SIP on %s', hostport) ;
-  console.log('transports %s', JSON.stringify(app.transports)) ;
+  logger.info(`connected to drachtio listening for SIP on ${hostport}`) ;
+  logger.debug(srf.locals.transports) ;
 })
-.on('error', function(err){
-  console.error('Error connecting to drachtio server: ', err.message ) ;
-})
-.on('reconnecting', function(opts) {
-  console.error('attempting to reconect: ', opts) ;
-}) ;
+  .on('error', (err) => {
+    logger.error(err, 'Error connecting to drachtio server') ;
+  }) ;
 
+const Register = require('./lib/register') ;
+const Registrar = require('./lib/registrar') ;
+const CallProcessor = require('./lib/call-processor') ;
+const Subscriber = require('./lib/subscriber') ;
 
-var Register = require('./lib/register') ;
-var Registrar = require('./lib/registrar') ;
-var CallProcessor = require('./lib/call-processor') ;
-var Subscriber = require('./lib/subscriber') ;
-
-var registrar = new Registrar() ;
-var register = new Register(srf, registrar) ;
-var callProcessor = new CallProcessor(srf, config.mediaServer, registrar) ;
-var subscriber = new Subscriber(srf, registrar) ;
-
-srf.use( blacklist({chain: 'LOGDROP'}) ) ;
+const registrar = new Registrar(logger) ;
+const register = new Register(srf, registrar) ;
+const callProcessor = new CallProcessor(srf, rtpengine, registrar) ;
+const subscriber = new Subscriber(srf, registrar) ;
 
 register.start() ;
 subscriber.start() ;
 callProcessor.start() ;
+
